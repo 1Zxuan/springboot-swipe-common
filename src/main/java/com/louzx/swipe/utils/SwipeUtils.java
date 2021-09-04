@@ -3,6 +3,8 @@ package com.louzx.swipe.utils;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
@@ -13,6 +15,8 @@ import java.util.concurrent.*;
  * @date 2021/9/3
  */
 public final class SwipeUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(SwipeUtils.class);
 
     /**
      * 当个线程池
@@ -62,7 +66,8 @@ public final class SwipeUtils {
         }
         try {
             return JSONObject.parseObject(str);
-        } catch (Exception ignore) {
+        } catch (Exception e) {
+            logger.error(">>>>>>>>【{}】获取JSON数据异常：【{}】<<<<<<<<", str, e.getMessage());
             return null;
         }
     }

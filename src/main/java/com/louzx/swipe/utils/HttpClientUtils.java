@@ -55,16 +55,7 @@ public class HttpClientUtils {
     }
 
     public static JSONObject getJson (String url) {
-        String s = get(url);
-        try {
-            if (StringUtils.isNotBlank(s)) {
-                return JSONObject.parseObject(s);
-            }
-        } catch (Exception e) {
-            logger.error(">>>>>>>>获取JSON数据异常：【{}】<<<<<<<<", e.getMessage());
-            return null;
-        }
-        return null;
+        return SwipeUtils.parseJson(get(url));
     }
 
 
