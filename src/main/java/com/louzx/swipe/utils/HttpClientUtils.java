@@ -34,8 +34,6 @@ public class HttpClientUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpClientUtils.class);
 
-    private static final ThreadLocal<List<HttpCookie>> LOCAL_COOKIES = new ThreadLocal<>();
-
     static {
         try {
             trustAllHttpsCertificates();
@@ -47,8 +45,6 @@ public class HttpClientUtils {
     private static Charset defChartSet = StandardCharsets.UTF_8;
     private static String defAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";
     private static boolean defRandAgent = true;
-    private static boolean useCookie = false;
-
 
     public static String get (String url) {
         return doHttp(url, Method.GET, null, null, null, null, null, defRandAgent);
@@ -72,12 +68,7 @@ public class HttpClientUtils {
         BufferedReader br = null;
         GZIPInputStream zipIs = null;
         InputStreamReader isr = null;
-        CookieManager cm = null;
-        List<HttpCookie> cookies = LOCAL_COOKIES.get();
         try {
-//            if (useCookie && null == ) {
-//                cm = new CookieManager();
-//            }
             URL u = new URL(url);
             conn = (HttpURLConnection) u.openConnection();
             conn.setRequestMethod(null == method ? Method.GET.name() : method.name());
@@ -164,7 +155,4 @@ public class HttpClientUtils {
         HttpClientUtils.defRandAgent = defRandAgent;
     }
 
-    public static void setUseCookie(boolean useCookie) {
-        HttpClientUtils.useCookie = useCookie;
-    }
 }
