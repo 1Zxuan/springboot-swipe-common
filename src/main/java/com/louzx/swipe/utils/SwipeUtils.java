@@ -1,13 +1,17 @@
 package com.louzx.swipe.utils;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 
 /**
@@ -17,6 +21,51 @@ import java.util.concurrent.*;
 public final class SwipeUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(SwipeUtils.class);
+
+    public static String jsonConvertFrom (Object data) throws UnsupportedEncodingException {
+        return jsonConvertFrom(data, true, null);
+    }
+
+    public static String jsonConvertFrom (Object data, boolean encode, Charset charset) throws UnsupportedEncodingException {
+        StringBuilder sb = new StringBuilder();
+        parse(sb, data);
+        if (sb.length() > 0 && sb.indexOf("&") != -1) {
+            sb.deleteCharAt(sb.lastIndexOf("&"));
+        }
+        if (encode && null == charset) {
+            charset = StandardCharsets.UTF_8;
+        }
+        return encode ? URLEncoder.encode(sb.toString(), String.valueOf(charset)) : sb.toString();
+    }
+
+    public static void parse (StringBuilder sb, Object data) {
+        if (data instanceof Map) {
+            JSONObject jo = (JSONObject) data;
+            for (Map.Entry<String, Object> entry : jo.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                sb.append(key).append("=");
+                if (value instanceof Map) {
+                    parse(sb, value);
+                } else if (value instanceof List) {
+                    JSONArray tmpJa = (JSONArray) value;
+                    for (Object o : tmpJa) {
+                        parse(sb, o);
+                    }
+                } else {
+                    sb.append(value);
+                }
+                sb.append("&");
+            }
+        } else if (data instanceof List) {
+            JSONArray ja = (JSONArray) data;
+            for (Object o : ja) {
+                parse(sb, o);
+            }
+        } else {
+            sb.append(data).append("&");
+        }
+    }
 
     /**
      * 当个线程池

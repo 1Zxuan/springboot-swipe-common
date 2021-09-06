@@ -50,11 +50,13 @@ public class HttpClientUtils {
         return doHttp(url, Method.GET, null, null, null, null, null, defRandAgent);
     }
 
-    public static JSONObject getJson (String url) {
-        return SwipeUtils.parseJson(get(url));
+    public static String doHttp (String url, Method method, Map<String, String> header, String body) {
+        return doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent);
     }
 
-
+    public static JSONObject getJson (String url, Method method, Map<String, String> header, String body) {
+        return SwipeUtils.parseJson(doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent));
+    }
 
     public static String doHttp (String url, Method method, Map<String, String> header, String body,
                                  Integer readTimeOut, Integer connectionTimeOut, Charset chartSet, boolean randAgent) {
