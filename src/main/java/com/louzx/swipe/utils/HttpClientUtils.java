@@ -88,7 +88,13 @@ public class HttpClientUtils {
             }
             if (200 == conn.getResponseCode()) {
                 is = conn.getInputStream();
-                isr = new InputStreamReader(is, chartSet);
+                String contentEncoding = conn.getContentEncoding();
+                if ("gzip".equalsIgnoreCase(contentEncoding)) {
+                    zipIs = new GZIPInputStream(is);
+                    isr = new InputStreamReader(zipIs, chartSet);
+                } else {
+                    isr = new InputStreamReader(is, chartSet);
+                }
                 br = new BufferedReader(isr);
                 StringBuilder sb = new StringBuilder();
                 String tmpStr;
