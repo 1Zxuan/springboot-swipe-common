@@ -1,15 +1,14 @@
-package com.louzx.swipe.jdbc;
+package com.louzx.swipe.core.jdbc;
 
-import com.louzx.swipe.constants.CommonConstants;
-import com.louzx.swipe.exception.SqlBuilderException;
-import com.louzx.swipe.utils.PageUtils;
+import com.louzx.swipe.core.constants.CommonConstants;
+import com.louzx.swipe.core.exception.SqlBuilderException;
+import com.louzx.swipe.core.utils.PageUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import com.louzx.swipe.jdbc.Id.*;
 
 public class SqlBuilder {
 
@@ -431,18 +430,18 @@ public class SqlBuilder {
 					} else if (!(fieldVal instanceof String) && null != fieldVal) {
 						fieldList.add(":" + field.getName());
 					} else {
-						GenerationType type = id.type();
-						if (GenerationType.SEQUENCE == type) {
+						Id.GenerationType type = id.type();
+						if (Id.GenerationType.SEQUENCE == type) {
 							String sequence = id.sequence();
 							if (StringUtils.isEmpty(sequence)) {
 								throw new SqlBuilderException("sequence为空!");
 							}
 							fieldList.add(sequence + ".NEXTVAL");
-						} else if (GenerationType.UUID == type) {
+						} else if (Id.GenerationType.UUID == type) {
 							String uuid = UUID.randomUUID().toString();
 							fieldList.add("'" + uuid + "'");
 							setUuid(uuid);
-						} else if (GenerationType.TIMEANDSEQUENCE == type) {
+						} else if (Id.GenerationType.TIMEANDSEQUENCE == type) {
 							String sequence = id.sequence();
 							if (StringUtils.isEmpty(sequence)) {
 								throw new SqlBuilderException("sequence为空!");
@@ -451,9 +450,9 @@ public class SqlBuilder {
 							SimpleDateFormat sdf = new SimpleDateFormat(dft);
 							String dateStr = sdf.format(new Date());
 							String idStr = "";
-							if (id.dbType() == DBType.ORACLE) {
+							if (id.dbType() == Id.DBType.ORACLE) {
 								idStr = "'" + dateStr + "' || " + sequence + ".NEXTVAL";
-							} else if (id.dbType() == DBType.MYSQL) {
+							} else if (id.dbType() == Id.DBType.MYSQL) {
 								idStr = "concat('" + dateStr + "', " + sequence + ".NEXTVAL)";
 							} else {
 								idStr = "'" + dateStr + "' || " + sequence + ".NEXTVAL";

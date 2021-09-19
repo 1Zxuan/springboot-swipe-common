@@ -1,7 +1,7 @@
-package com.louzx.swipe.dao.impl;
+package com.louzx.swipe.core.dao.impl;
 
-import com.louzx.swipe.dao.ICommonDao;
-import com.louzx.swipe.jdbc.SqlBuilder;
+import com.louzx.swipe.core.dao.ICommonDao;
+import com.louzx.swipe.core.jdbc.SqlBuilder;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
@@ -21,49 +21,49 @@ import java.util.Map;
 public class CommonDaoImpl extends BaseDao implements ICommonDao {
 
     public Integer count(SqlBuilder sqlBuilder) {
-        return getNamedTemplate().queryForObject(sqlBuilder.getCountSql(), sqlBuilder.getParams(), Integer.class);
+        return namedParameterJdbcTemplate.queryForObject(sqlBuilder.getCountSql(), sqlBuilder.getParams(), Integer.class);
     }
 
     @SuppressWarnings("unchecked")
     public <T> List<T> query(SqlBuilder sqlBuilder) {
-        return (List<T>) getNamedTemplate().query(sqlBuilder.getSelectSql(), sqlBuilder.getParams(),
+        return (List<T>) namedParameterJdbcTemplate.query(sqlBuilder.getSelectSql(), sqlBuilder.getParams(),
                 BeanPropertyRowMapper.newInstance(sqlBuilder.getCls()));
     }
 
     public void save(SqlBuilder sqlBuilder, Object obj) {
         sqlBuilder.addParams(obj);
-        getNamedTemplate().update(sqlBuilder.getInsertSql(), new BeanPropertySqlParameterSource(obj));
+        namedParameterJdbcTemplate.update(sqlBuilder.getInsertSql(), new BeanPropertySqlParameterSource(obj));
     }
 
     public Long saveReturnKey(SqlBuilder sqlBuilder, Object obj) {
         sqlBuilder.addParams(obj);
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        getNamedTemplate().update(sqlBuilder.getInsertSql(), new BeanPropertySqlParameterSource(obj), keyHolder,
+        namedParameterJdbcTemplate.update(sqlBuilder.getInsertSql(), new BeanPropertySqlParameterSource(obj), keyHolder,
                 sqlBuilder.getPks());
         return keyHolder.getKey().longValue();
     }
 
     public void delete(SqlBuilder sqlBuilder) {
-        getNamedTemplate().update(sqlBuilder.getDeleteSql(), sqlBuilder.getParams());
+        namedParameterJdbcTemplate.update(sqlBuilder.getDeleteSql(), sqlBuilder.getParams());
     }
 
     public void save(SqlBuilder sqlBuilder, List<?> list) {
         sqlBuilder.setBatchUpdate(true);
-        getNamedTemplate().batchUpdate(sqlBuilder.getInsertSql(), SqlParameterSourceUtils.createBatch(list.toArray()));
+        namedParameterJdbcTemplate.batchUpdate(sqlBuilder.getInsertSql(), SqlParameterSourceUtils.createBatch(list.toArray()));
     }
 
     public void update(SqlBuilder sqlBuilder, Object obj) {
         sqlBuilder.addParams(obj);
-        getNamedTemplate().update(sqlBuilder.getUpdateSql(), sqlBuilder.getParams());
+        namedParameterJdbcTemplate.update(sqlBuilder.getUpdateSql(), sqlBuilder.getParams());
     }
 
     public void updateByProperty(SqlBuilder sqlBuilder) {
-        getNamedTemplate().update(sqlBuilder.getUpdateByPropertySql(), sqlBuilder.getParams());
+        namedParameterJdbcTemplate.update(sqlBuilder.getUpdateByPropertySql(), sqlBuilder.getParams());
     }
 
     @SuppressWarnings("unchecked")
     public <T> T queryForObject(SqlBuilder sqlBuilder) {
-        List<T> list = (List<T>) getNamedTemplate().query(sqlBuilder.getSelectSql(), sqlBuilder.getParams(),
+        List<T> list = (List<T>) namedParameterJdbcTemplate.query(sqlBuilder.getSelectSql(), sqlBuilder.getParams(),
                 BeanPropertyRowMapper.newInstance(sqlBuilder.getCls()));
         if (list != null && list.size() > 0) {
             return list.get(0);
@@ -73,25 +73,25 @@ public class CommonDaoImpl extends BaseDao implements ICommonDao {
 
     public Integer getSequence(String sequence_name) {
         String sql = "select " + sequence_name + ".Nextval from dual";
-        return getNamedTemplate().queryForObject(sql, new HashMap<String, Object>(), Integer.class);
+        return namedParameterJdbcTemplate.queryForObject(sql, new HashMap<String, Object>(), Integer.class);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> List<T> queryBySql(Class<T> cls, String sql, List<Object> params) {
         if (null == params) {
-            return getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(cls));
+            return jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(cls));
         }
-        return getJdbcTemplate().query(sql, params.toArray(), BeanPropertyRowMapper.newInstance(cls));
+        return jdbcTemplate.query(sql, params.toArray(), BeanPropertyRowMapper.newInstance(cls));
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> List<T> queryBySql(Class<T> cls, String sql, Map<String, Object> params) {
         if (null == params) {
-            return getNamedTemplate().query(sql, BeanPropertyRowMapper.newInstance(cls));
+            return namedParameterJdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(cls));
         }
-        return getNamedTemplate().query(sql, params, BeanPropertyRowMapper.newInstance(cls));
+        return namedParameterJdbcTemplate.query(sql, params, BeanPropertyRowMapper.newInstance(cls));
     }
 
     @Override
@@ -115,23 +115,23 @@ public class CommonDaoImpl extends BaseDao implements ICommonDao {
     @Override
     public Integer countBySql(String sql, List<Object> params) {
         if (null == params) {
-            return getJdbcTemplate().queryForObject(sql, Integer.class);
+            return jdbcTemplate.queryForObject(sql, Integer.class);
         }
-        return getJdbcTemplate().queryForObject(sql, params.toArray(), Integer.class);
+        return jdbcTemplate.queryForObject(sql, params.toArray(), Integer.class);
     }
 
     @Override
     public Integer countBySql(String sql, Map<String, Object> params) {
-        return getNamedTemplate().queryForObject(sql, params, Integer.class);
+        return namedParameterJdbcTemplate.queryForObject(sql, params, Integer.class);
     }
 
     @Override
     public void updateBySql(String sql, Object[] params) {
-        getJdbcTemplate().update(sql, params);
+        jdbcTemplate.update(sql, params);
     }
 
     @Override
     public void updateBySql(String sql, Map<String, Object> params) {
-        getNamedTemplate().update(sql, params);
+        namedParameterJdbcTemplate.update(sql, params);
     }
 }

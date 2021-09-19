@@ -1,6 +1,7 @@
-package com.louzx.swipe.dao;
+package com.louzx.swipe.core.dao;
 
-import com.louzx.swipe.jdbc.SqlBuilder;
+
+import com.louzx.swipe.core.jdbc.SqlBuilder;
 
 import java.util.List;
 import java.util.Map;

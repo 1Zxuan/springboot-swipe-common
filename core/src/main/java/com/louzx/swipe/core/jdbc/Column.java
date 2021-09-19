@@ -1,4 +1,4 @@
-package com.louzx.swipe.jdbc;
+package com.louzx.swipe.core.jdbc;
 
 import java.lang.annotation.*;
 

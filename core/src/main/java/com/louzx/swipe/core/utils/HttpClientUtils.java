@@ -1,7 +1,6 @@
-package com.louzx.swipe.utils;
+package com.louzx.swipe.core.utils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.louzx.swipe.constants.Method;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -12,19 +11,17 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.*;
-import java.net.CookieManager;
-import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Map;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.zip.GZIPInputStream;
+import com.louzx.swipe.core.constants.Method;
 
 /**
  * @author louzx
@@ -47,19 +44,31 @@ public class HttpClientUtils {
     private static boolean defRandAgent = true;
 
     public static String get (String url) {
-        return doHttp(url, Method.GET, null, null, null, null, null, defRandAgent);
+        return get(url, null);
+    }
+
+    public static String get (String url, CallBack callBack) {
+        return doHttp(url, Method.GET, null, null, null, null, null, defRandAgent, callBack);
     }
 
     public static String doHttp (String url, Method method, Map<String, String> header, String body) {
-        return doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent);
+        return doHttp(url, method,header, body, null);
+    }
+
+    public static String doHttp (String url, Method method, Map<String, String> header, String body, CallBack callBack) {
+        return doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent, callBack);
     }
 
     public static JSONObject getJson (String url, Method method, Map<String, String> header, String body) {
-        return SwipeUtils.parseJson(doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent));
+        return SwipeUtils.parseJson(doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent, null));
+    }
+
+    public interface CallBack {
+        String doCallBack(String response);
     }
 
     public static String doHttp (String url, Method method, Map<String, String> header, String body,
-                                 Integer readTimeOut, Integer connectionTimeOut, Charset chartSet, boolean randAgent) {
+                                 Integer readTimeOut, Integer connectionTimeOut, Charset chartSet, boolean randAgent, CallBack callBack) {
         if (null == chartSet) {
             chartSet = defChartSet;
         }
@@ -70,6 +79,7 @@ public class HttpClientUtils {
         BufferedReader br = null;
         GZIPInputStream zipIs = null;
         InputStreamReader isr = null;
+        StringBuilder sb = null;
         try {
             URL u = new URL(url);
             conn = (HttpURLConnection) u.openConnection();
@@ -95,11 +105,14 @@ public class HttpClientUtils {
                 } else {
                     isr = new InputStreamReader(is, chartSet);
                 }
+                sb = new StringBuilder();
                 br = new BufferedReader(isr);
-                StringBuilder sb = new StringBuilder();
                 String tmpStr;
                 while (null != (tmpStr = br.readLine())) {
                     sb.append(tmpStr);
+                }
+                if (null != callBack) {
+                    return callBack.doCallBack(sb.toString());
                 }
                 return sb.toString();
             }

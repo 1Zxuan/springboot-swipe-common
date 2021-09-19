@@ -1,4 +1,4 @@
-package com.louzx.swipe.constants;
+package com.louzx.swipe.core.constants;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package com.louzx.swipe.utils;
+package com.louzx.swipe.core.utils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -21,6 +22,35 @@ import java.util.concurrent.*;
 public final class SwipeUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(SwipeUtils.class);
+
+    public static boolean haveTrue (boolean... condition) {
+        if (null != condition && condition.length > 0) {
+            for (boolean b : condition) {
+                if (b) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static void throwIsNull(Object obj, String message) throws Exception {
+        if (null == obj) {
+            throw new Exception(message);
+        }
+    }
+
+    public static <T> void throwIsEmpty (Collection<T> collection, String message) throws Exception {
+        if (null == collection || collection.isEmpty()) {
+            throw new Exception(message);
+        }
+    }
+
+    public static void throwIsTrue (boolean condition, String message) throws Exception {
+        if (condition) {
+            throw new Exception(message);
+        }
+    }
 
     public static String jsonConvertFrom (Object data) throws UnsupportedEncodingException {
         return jsonConvertFrom(data, true, null);
@@ -143,8 +173,26 @@ public final class SwipeUtils {
         return (int) (Math.random() * max);
     }
 
-    public static void fixSleep(long sleepTime) {
+    public static void sleepFix(long sleepTime) {
         sleep(sleepTime);
+    }
+
+    public static void sleepIfNull(Object obj) {
+        sleepIfNull(obj, 100, true);
+    }
+
+    public static void sleepIfNull(Object obj, long sleepTime) {
+        sleepIfNull(obj, sleepTime, true);
+    }
+
+    public static void sleepIfNull(Object obj, long sleepTime, boolean rand) {
+        if (null == obj) {
+            if (rand) {
+                randSleep(sleepTime);
+            } else {
+                sleepFix(sleepTime);
+            }
+        }
     }
 
     public static void randSleep(long sleepTime) {

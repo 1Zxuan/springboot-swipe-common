@@ -1,12 +1,13 @@
 /**
  * 
  */
-package com.louzx.swipe.utils;
+package com.louzx.swipe.core.utils;
 
 
 
 
-import com.louzx.swipe.jdbc.DbType;
+
+import com.louzx.swipe.core.jdbc.DbType;
 
 import java.util.HashMap;
 import java.util.Map;

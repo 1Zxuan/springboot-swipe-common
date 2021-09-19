@@ -1,4 +1,4 @@
-package com.louzx.swipe.exception;
+package com.louzx.swipe.core.exception;
 
 import java.io.Serializable;
 
