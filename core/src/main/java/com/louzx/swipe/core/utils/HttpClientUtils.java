@@ -12,6 +12,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -42,9 +43,17 @@ public class HttpClientUtils {
     private static Charset defChartSet = StandardCharsets.UTF_8;
     private static String defAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";
     private static boolean defRandAgent = true;
+    /** 是否开启输出 */
+    private static final ThreadLocal<Boolean> throughoutOpenOutStream = new ThreadLocal<>();
+    /** 代理 */
+    private static Proxy proxy;
 
     public static String get (String url) {
         return get(url, null);
+    }
+
+    public static String get (String url, Integer connectionTimeOut, Integer readTimeOut) {
+        return doHttp(url, Method.GET, null, null, readTimeOut, connectionTimeOut, null, defRandAgent, null);
     }
 
     public static String get (String url, CallBack callBack) {
@@ -65,6 +74,8 @@ public class HttpClientUtils {
 
     public interface CallBack {
         String doCallBack(String response);
+
+        boolean responseCode(Integer code);
     }
 
     public static String doHttp (String url, Method method, Map<String, String> header, String body,
@@ -82,7 +93,7 @@ public class HttpClientUtils {
         StringBuilder sb = null;
         try {
             URL u = new URL(url);
-            conn = (HttpURLConnection) u.openConnection();
+            conn = null == proxy ? (HttpURLConnection) u.openConnection() : (HttpURLConnection) u.openConnection(proxy);
             conn.setRequestMethod(null == method ? Method.GET.name() : method.name());
             conn.setConnectTimeout(null == connectionTimeOut ? defConnectionTimeOut : connectionTimeOut);
             conn.setReadTimeout(null == readTimeOut ? defReadTimeOut : readTimeOut);
@@ -95,9 +106,24 @@ public class HttpClientUtils {
                 conn.setDoOutput(true);
                 os = conn.getOutputStream();
                 os.write(body.getBytes(chartSet));
+            } else if (null != throughoutOpenOutStream.get() && throughoutOpenOutStream.get()) {
+                conn.setDoOutput(true);
+                os = conn.getOutputStream();
+                os.write("".getBytes(chartSet));
             }
-            if (200 == conn.getResponseCode()) {
+            int responseCode = conn.getResponseCode();
+            if (responseCode >= 400) {
+                is = conn.getErrorStream();
+            } else {
                 is = conn.getInputStream();
+            }
+            if (null != callBack) {
+                boolean isContinue = callBack.responseCode(responseCode);
+                if (!isContinue) {
+                    return null;
+                }
+            }
+            if (null != is) {
                 String contentEncoding = conn.getContentEncoding();
                 if ("gzip".equalsIgnoreCase(contentEncoding)) {
                     zipIs = new GZIPInputStream(is);
@@ -176,4 +202,15 @@ public class HttpClientUtils {
         HttpClientUtils.defRandAgent = defRandAgent;
     }
 
+    public static void setThroughoutOpenOutStream(boolean open) {
+        throughoutOpenOutStream.set(open);
+    }
+
+    public static void removeThroughoutOpenOutStream() {
+        throughoutOpenOutStream.remove();
+    }
+
+    public static void setProxy(Proxy proxy) {
+        HttpClientUtils.proxy = proxy;
+    }
 }

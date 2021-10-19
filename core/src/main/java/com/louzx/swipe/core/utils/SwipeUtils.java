@@ -2,6 +2,8 @@ package com.louzx.swipe.core.utils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.louzx.swipe.core.constants.Method;
+import com.louzx.swipe.core.exception.TaskErrorException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,29 @@ import java.util.concurrent.*;
 public final class SwipeUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(SwipeUtils.class);
+
+    public static void throwTaskErrorIfTrue(String message, boolean... condition) throws TaskErrorException {
+        if (null != condition) {
+            for (boolean b : condition) {
+                if (b) {
+                    throw new TaskErrorException(message);
+                }
+            }
+        }
+    }
+
+    public static void sleepToNow(Long sleep) {
+        if (null != sleep) {
+            long l = sleep - System.currentTimeMillis();
+            if (l > 0) {
+                sleep(l);
+            }
+        }
+    }
+
+    public static boolean canList (List<?> list) {
+        return null != list && list.size() > 0;
+    }
 
     public static boolean haveTrue (boolean... condition) {
         if (null != condition && condition.length > 0) {
@@ -146,7 +171,7 @@ public final class SwipeUtils {
         try {
             return JSONObject.parseObject(str);
         } catch (Exception e) {
-            logger.error(">>>>>>>>【{}】获取JSON数据异常：【{}】<<<<<<<<", str, e.getMessage());
+            logger.error(">>>>>>>>获取JSON数据异常：【{}】<<<<<<<<", e.getMessage());
             return null;
         }
     }
@@ -175,6 +200,26 @@ public final class SwipeUtils {
 
     public static void sleepFix(long sleepTime) {
         sleep(sleepTime);
+    }
+
+    public static void sleepIfTrue(boolean condition, Integer sleepTime) {
+        sleepIfTrue(condition, sleepTime, false);
+    }
+
+    public static void sleepRandIfTrue (boolean condition, Integer sleepTime){
+        if (condition) {
+            randSleep(sleepTime);
+        }
+    }
+
+    public static void sleepIfTrue(boolean condition, Integer sleepTime, boolean rand) {
+        if (condition) {
+            if (rand) {
+                randSleep(sleepTime);
+            } else {
+                sleep(sleepTime);
+            }
+        }
     }
 
     public static void sleepIfNull(Object obj) {

@@ -6,6 +6,9 @@ package com.louzx.swipe.core.constants;
 
 public class CommonConstants {
 
+	public static volatile boolean SYS_STOP = false;
+	public static final String GOODS_ITEM = "商品：【%s】，数量：【%s】<br/>";
+
 	public static final int DEF_PAGE_SIZE=10; //默认每页行数
 	public static final int DEF_PAGE_INDEX=1; //默认当前页号
 	

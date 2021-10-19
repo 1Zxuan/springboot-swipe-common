@@ -382,6 +382,10 @@ public class SqlBuilder {
 				continue;
 			}
 			Transient trans = field.getAnnotation(Transient.class);
+			Id id = field.getAnnotation(Id.class);
+			if (null != id && Id.GenerationType.IGNORE == id.type()) {
+				continue;
+			}
 			if (trans == null || !trans.isTransient()) {
 				fieldList.add(getColumnNameByPropertyName(field.getName()));
 			}
@@ -431,6 +435,9 @@ public class SqlBuilder {
 						fieldList.add(":" + field.getName());
 					} else {
 						Id.GenerationType type = id.type();
+						if (Id.GenerationType.IGNORE == type) {
+							continue;
+						}
 						if (Id.GenerationType.SEQUENCE == type) {
 							String sequence = id.sequence();
 							if (StringUtils.isEmpty(sequence)) {

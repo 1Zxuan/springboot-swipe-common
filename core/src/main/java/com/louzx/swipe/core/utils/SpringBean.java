@@ -8,22 +8,22 @@ import org.springframework.stereotype.Component;
 @Component("springIoc")
 public class SpringBean implements ApplicationContextAware {
 
-    private ApplicationContext context;
+    private static ApplicationContext context;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.context = applicationContext;
+        SpringBean.context = applicationContext;
     }
 
-    public Object getBean (String beanName) {
+    public static Object getBean (String beanName) {
         return context.getBean(beanName);
     }
 
-    public <T> T getBean (Class<T> clazz) {
+    public static <T> T getBean (Class<T> clazz) {
         return context.getBean(clazz);
     }
 
-    public <T> T getBean (String beanName, Class<T> clazz) {
+    public static <T> T getBean (String beanName, Class<T> clazz) {
         return context.getBean(beanName, clazz);
     }
 }

@@ -28,7 +28,9 @@ public @interface Id {
 		UUID, 
 		SEQUENCE,
 		/**时间戳加SEQUENCE类型*/
-		TIMEANDSEQUENCE
+		TIMEANDSEQUENCE,
+		//数据库自增
+		IGNORE
 	}
 	
 	/**
