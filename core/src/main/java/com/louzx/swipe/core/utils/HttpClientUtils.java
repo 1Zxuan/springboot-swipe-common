@@ -73,9 +73,13 @@ public class HttpClientUtils {
     }
 
     public interface CallBack {
-        String doCallBack(String response);
+        default String doCallBack(String response) {
+            return response;
+        }
 
-        boolean responseCode(Integer code);
+        default boolean responseCode(Integer code) {
+            return true;
+        }
     }
 
     public static String doHttp (String url, Method method, Map<String, String> header, String body,
