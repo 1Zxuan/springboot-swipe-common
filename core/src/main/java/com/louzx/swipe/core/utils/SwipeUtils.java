@@ -2,7 +2,6 @@ package com.louzx.swipe.core.utils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.louzx.swipe.core.constants.Method;
 import com.louzx.swipe.core.exception.TaskErrorException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

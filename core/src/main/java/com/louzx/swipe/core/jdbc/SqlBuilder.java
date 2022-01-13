@@ -169,6 +169,13 @@ public class SqlBuilder {
 		return this;
 	}
 
+	public SqlBuilder update(boolean condition, String property, Object value) {
+		if (condition) {
+			update(property, value);
+		}
+		return this;
+	}
+
 	public SqlBuilder addParams(Object obj) {
 		Class<?> cls = obj.getClass();
 		Field[] fields = cls.getDeclaredFields();

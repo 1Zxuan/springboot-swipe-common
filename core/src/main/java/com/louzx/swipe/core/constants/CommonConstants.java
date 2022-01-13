@@ -1,5 +1,12 @@
 package com.louzx.swipe.core.constants;
 
+import com.louzx.swipe.core.entity.AbstractSwipeTask;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 /**
  * 
  */
@@ -32,5 +39,42 @@ public class CommonConstants {
 	 * 动态表明
 	 * */
 	public static final String DYNAMIC = "${dynamic}";
-	
+
+	private static final Set<AbstractSwipeTask> RUN_TASKS = new HashSet<>();
+
+	public static synchronized void addRunTask (AbstractSwipeTask swipeTask) {
+		for (AbstractSwipeTask runTask : RUN_TASKS) {
+			if (StringUtils.equals(runTask.getId(), swipeTask.getId())) {
+				return;
+			}
+		}
+		RUN_TASKS.add(swipeTask);
+	}
+
+	@Deprecated
+	public static synchronized void removeRunTask(AbstractSwipeTask swipeTask) {
+		Iterator<AbstractSwipeTask> iterator = RUN_TASKS.iterator();
+		while (iterator.hasNext()) {
+			AbstractSwipeTask task = iterator.next();
+			if (StringUtils.equalsIgnoreCase(swipeTask.getId(), task.getId())) {
+				iterator.remove();
+				break;
+			}
+		}
+	}
+
+	public static synchronized void stopTask(AbstractSwipeTask swipeTask) {
+		Iterator<AbstractSwipeTask> iterator = RUN_TASKS.iterator();
+		while (iterator.hasNext()) {
+			AbstractSwipeTask task = iterator.next();
+			if (StringUtils.equalsIgnoreCase(swipeTask.getId(), task.getId())) {
+				if (!task.isStop()) {
+					task.setStop(true);
+					iterator.remove();
+					break;
+				}
+			}
+		}
+	}
+
 }
