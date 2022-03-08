@@ -80,10 +80,14 @@ public final class SwipeUtils {
         return jsonConvertFrom(data, true, null);
     }
 
+    public static String jsonConvertFrom (Object data, boolean encode) throws UnsupportedEncodingException {
+        return jsonConvertFrom(data, encode, null);
+    }
+
     public static String jsonConvertFrom (Object data, boolean encode, Charset charset) throws UnsupportedEncodingException {
         StringBuilder sb = new StringBuilder();
         parse(sb, data);
-        if (sb.length() > 0 && sb.indexOf("&") != -1) {
+        if (StringUtils.endsWith(sb, "&") && sb.length() > 0 && sb.indexOf("&") != -1) {
             sb.deleteCharAt(sb.lastIndexOf("&"));
         }
         if (encode && null == charset) {
@@ -110,6 +114,9 @@ public final class SwipeUtils {
                     sb.append(value);
                 }
                 sb.append("&");
+            }
+            if (sb.indexOf("&") > 0) {
+                sb.deleteCharAt(sb.lastIndexOf("&"));
             }
         } else if (data instanceof List) {
             JSONArray ja = (JSONArray) data;
