@@ -41,6 +41,7 @@ public class HttpClientUtils {
         } catch (NoSuchAlgorithmException | KeyManagementException ignore) {  }
     }
 
+    private static boolean logOut = false;
     private static Integer defReadTimeOut = 3000;
     private static Integer defConnectionTimeOut = 3000;
     private static Charset defChartSet = StandardCharsets.UTF_8;
@@ -150,7 +151,9 @@ public class HttpClientUtils {
                 return sb.toString();
             }
         } catch (Exception e) {
-            logger.error(">>>>>>>>HttpClient：【{}】，URL：【{}】，Method：【{}】<<<<<<<<", e.getMessage(), url, method);
+            if (logOut) {
+                logger.error(">>>>>>>>HttpClient：【{}】，URL：【{}】，Method：【{}】<<<<<<<<", e.getMessage(), url, method);
+            }
         } finally {
             IOUtils.closeQuietly(br);
             IOUtils.closeQuietly(zipIs);
@@ -219,5 +222,9 @@ public class HttpClientUtils {
 
     public static void setProxy(Proxy proxy) {
         HttpClientUtils.proxy = proxy;
+    }
+
+    public static void setLogOut(boolean logOut) {
+        HttpClientUtils.logOut = logOut;
     }
 }
