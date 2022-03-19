@@ -170,16 +170,22 @@ public final class SwipeUtils {
      * @param str 需要格式化文字
      * @return json
      */
-    public static JSONObject parseJson (String str) {
+    public static JSONObject parseJson (String str, boolean print) {
         if (StringUtils.isBlank(str)) {
             return null;
         }
         try {
             return JSONObject.parseObject(str);
         } catch (Exception e) {
-            logger.error(">>>>>>>>获取JSON数据异常：【{}】<<<<<<<<", e.getMessage());
+            if (print) {
+                logger.error(">>>>>>>>获取JSON数据异常：【{}】<<<<<<<<", e.getMessage());
+            }
             return null;
         }
+    }
+
+    public static JSONObject parseJson (String str) {
+        return parseJson(str, false);
     }
 
     public static String randAgent() {
