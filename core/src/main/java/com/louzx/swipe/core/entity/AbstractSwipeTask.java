@@ -15,7 +15,7 @@ public abstract class AbstractSwipeTask {
 
     public abstract String getId();
 
-    protected boolean stop = false;
+    protected volatile boolean stop = false;
     //商品信息
     protected StringBuilder goodsInfo = new StringBuilder();
     //请求体头

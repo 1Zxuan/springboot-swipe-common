@@ -72,6 +72,7 @@ public class CommonConstants {
 			if (StringUtils.equalsIgnoreCase(swipeTask.getId(), task.getId())) {
 				if (!task.isStop()) {
 					task.setStop(true);
+					iterator.remove();
 					break;
 				}
 			}
