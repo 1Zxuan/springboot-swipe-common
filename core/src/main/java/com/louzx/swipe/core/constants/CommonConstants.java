@@ -13,6 +13,8 @@ import java.util.Set;
 
 public class CommonConstants {
 
+	public static final Integer COUPON = 1;
+
 	public static volatile boolean SYS_STOP = false;
 	public static final String GOODS_ITEM = "商品：【%s】，数量：【%s】<br/>";
 
