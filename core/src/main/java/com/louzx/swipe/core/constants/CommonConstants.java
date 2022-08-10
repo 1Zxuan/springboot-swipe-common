@@ -42,8 +42,10 @@ public class CommonConstants {
 	 * */
 	public static final String DYNAMIC = "${dynamic}";
 
+	@Deprecated
 	private static final Set<AbstractSwipeTask> RUN_TASKS = new HashSet<>();
 
+	@Deprecated
 	public static synchronized void addRunTask (AbstractSwipeTask swipeTask) {
 		for (AbstractSwipeTask runTask : RUN_TASKS) {
 			if (StringUtils.equals(runTask.getId(), swipeTask.getId())) {
@@ -65,6 +67,7 @@ public class CommonConstants {
 		}
 	}
 
+	@Deprecated
 	public static synchronized void stopTask(AbstractSwipeTask swipeTask) {
 		Iterator<AbstractSwipeTask> iterator = RUN_TASKS.iterator();
 		while (iterator.hasNext()) {
