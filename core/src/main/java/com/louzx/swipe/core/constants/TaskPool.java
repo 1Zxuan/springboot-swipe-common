@@ -42,4 +42,12 @@ public class TaskPool {
             }
         }
     }
+
+    public static boolean isExist(String id) {
+        AbstractSwipeTask abstractSwipeTask = TASK_MAP.get(id);
+        if (null != abstractSwipeTask) {
+            return abstractSwipeTask.exist();
+        }
+        return true;
+    }
 }
