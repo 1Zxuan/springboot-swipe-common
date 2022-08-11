@@ -50,4 +50,8 @@ public class TaskPool {
         }
         return true;
     }
+
+    public static boolean containsKey(String id) {
+        return StringUtils.isNotBlank(id) && TASK_MAP.containsKey(id);
+    }
 }
