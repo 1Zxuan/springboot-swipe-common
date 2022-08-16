@@ -298,8 +298,8 @@ public class SqlBuilder {
 		return this;
 	}
 
-	public SqlBuilder in(String property, Object value) {
-		if (value != null) {
+	public SqlBuilder in(boolean condition, String property, Object value) {
+		if (condition && value != null) {
 			String _property = property + "_in";
 			criteria.add(getColumnNameByPropertyName(property) + " IN(:" + _property + ")");
 			params.put(_property, value);
@@ -307,13 +307,24 @@ public class SqlBuilder {
 		return this;
 	}
 
-	public SqlBuilder notIn(String property, Object value) {
-		if (value != null) {
+	@Deprecated
+	public SqlBuilder in(String property, Object value) {
+		return in(true, property, value);
+	}
+
+
+	public SqlBuilder notIn(boolean condition, String property, Object value) {
+		if (condition && value != null) {
 			String _property = property + "_notin";
 			criteria.add(getColumnNameByPropertyName(property) + " NOT IN(:" + _property + ")");
 			params.put(_property, value);
 		}
 		return this;
+	}
+
+	@Deprecated
+	public SqlBuilder notIn(String property, Object value) {
+		return notIn(true, property, value);
 	}
 
 	public SqlBuilder isNotNull(String property) {
