@@ -11,21 +11,13 @@ public class TaskPool {
     private final static Map<String, AbstractSwipeTask> TASK_MAP = new ConcurrentHashMap<>(16);
 
     public static boolean addTask (AbstractSwipeTask swipeTask) {
-        if (null == swipeTask || StringUtils.isNotBlank(swipeTask.getId())) {
+        String id;
+        if (null == swipeTask || StringUtils.isBlank((id = swipeTask.getId()))) {
             return false;
         }
-        String id = swipeTask.getId();
 
-        if (TASK_MAP.containsKey(id)) {
-            return false;
-        }
-        synchronized (TASK_MAP) {
-            if (!TASK_MAP.containsKey(id)) {
-                TASK_MAP.put(id, swipeTask);
-                return true;
-            }
-        }
-        return false;
+        TASK_MAP.computeIfAbsent(id, v -> swipeTask);
+        return true;
     }
 
     public static void removeTask(String id) {
