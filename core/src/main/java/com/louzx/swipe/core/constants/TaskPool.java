@@ -16,8 +16,7 @@ public class TaskPool {
             return false;
         }
 
-        TASK_MAP.computeIfAbsent(id, v -> swipeTask);
-        return true;
+        return swipeTask == TASK_MAP.computeIfAbsent(id, v -> swipeTask);
     }
 
     public static void removeTask(String id) {
