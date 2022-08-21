@@ -11,7 +11,7 @@ public class TaskPool {
     private final static Map<String, AbstractSwipeTask> TASK_MAP = new ConcurrentHashMap<>(16);
 
     public static boolean addTask (AbstractSwipeTask swipeTask) {
-        if (null == swipeTask || StringUtils.isNotBlank(swipeTask.getId())) {
+        if (null == swipeTask || StringUtils.isBlank(swipeTask.getId())) {
             return false;
         }
         String id = swipeTask.getId();
