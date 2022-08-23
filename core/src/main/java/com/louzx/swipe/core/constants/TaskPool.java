@@ -19,13 +19,8 @@ public class TaskPool {
         if (TASK_MAP.containsKey(id)) {
             return false;
         }
-        synchronized (TASK_MAP) {
-            if (!TASK_MAP.containsKey(id)) {
-                TASK_MAP.put(id, swipeTask);
-                return true;
-            }
-        }
-        return false;
+
+        return swipeTask == TASK_MAP.computeIfAbsent(id, v -> swipeTask);
     }
 
     public static void removeTask(String id) {
