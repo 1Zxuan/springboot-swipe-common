@@ -4,11 +4,16 @@ import com.louzx.swipe.core.entity.AbstractSwipeTask;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class TaskPool {
 
-    private final static Map<String, AbstractSwipeTask> TASK_MAP = new ConcurrentHashMap<>(16);
+    private final static Map<String, AbstractSwipeTask> TASK_MAP = new ConcurrentHashMap<>(64);
+
+    public static Set<String> ids() {
+        return TASK_MAP.keySet();
+    }
 
     public static boolean addTask (AbstractSwipeTask swipeTask) {
         if (null == swipeTask || StringUtils.isBlank(swipeTask.getId())) {
