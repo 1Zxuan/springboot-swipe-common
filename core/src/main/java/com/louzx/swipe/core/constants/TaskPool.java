@@ -15,6 +15,10 @@ public class TaskPool {
         return TASK_MAP.keySet();
     }
 
+    public static AbstractSwipeTask task(String id) {
+        return TASK_MAP.get(id);
+    }
+
     public static boolean addTask (AbstractSwipeTask swipeTask) {
         if (null == swipeTask || StringUtils.isBlank(swipeTask.getId())) {
             return false;
