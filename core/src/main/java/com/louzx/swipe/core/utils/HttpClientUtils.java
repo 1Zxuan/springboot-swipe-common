@@ -57,23 +57,27 @@ public class HttpClientUtils {
     }
 
     public static String get (String url, Integer connectionTimeOut, Integer readTimeOut) {
-        return doHttp(url, Method.GET, null, null, readTimeOut, connectionTimeOut, null, defRandAgent, null);
+        return doHttp(url, Method.GET, null, null, readTimeOut, connectionTimeOut, null, defRandAgent, null, null);
     }
 
     public static String get (String url, CallBack callBack) {
-        return doHttp(url, Method.GET, null, null, null, null, null, defRandAgent, callBack);
+        return doHttp(url, Method.GET, null, null, null, null, null, defRandAgent, callBack, null);
     }
 
     public static String doHttp (String url, Method method, Map<String, String> header, String body) {
-        return doHttp(url, method,header, body, null);
+        return doHttp(url, method,header, body, null, null);
     }
 
-    public static String doHttp (String url, Method method, Map<String, String> header, String body, CallBack callBack) {
-        return doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent, callBack);
+    public static String doHttp(String url, Method method, Map<String, String> header, String body, WaitCondition waitCondition) {
+        return doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent, null, waitCondition);
+    }
+
+    public static String doHttp (String url, Method method, Map<String, String> header, String body, CallBack callBack, WaitCondition waitCondition) {
+        return doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent, callBack, waitCondition);
     }
 
     public static JSONObject getJson (String url, Method method, Map<String, String> header, String body) {
-        return SwipeUtils.parseJson(doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent, null));
+        return SwipeUtils.parseJson(doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent, null, null));
     }
 
     public interface CallBack {
@@ -87,7 +91,8 @@ public class HttpClientUtils {
     }
 
     public static String doHttp (String url, Method method, Map<String, String> header, String body,
-                                 Integer readTimeOut, Integer connectionTimeOut, Charset chartSet, boolean randAgent, CallBack callBack) {
+                                 Integer readTimeOut, Integer connectionTimeOut, Charset chartSet,
+                                 boolean randAgent, CallBack callBack, WaitCondition waitCondition) {
         if (null == chartSet) {
             chartSet = defChartSet;
         }
@@ -118,6 +123,9 @@ public class HttpClientUtils {
                 conn.setDoOutput(true);
                 os = conn.getOutputStream();
                 os.write("".getBytes(chartSet));
+            }
+            if (null != waitCondition) {
+                waitCondition.await();
             }
             int responseCode = conn.getResponseCode();
             if (responseCode >= 400) {
