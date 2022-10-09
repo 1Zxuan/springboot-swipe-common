@@ -389,7 +389,7 @@ public class SqlBuilder {
 		String value = table.value();
 
 		if (StringUtils.isBlank(value)) {
-			value = underscoreName(cls.getName());
+			value = underscoreName(cls.getSimpleName());
 		}
 
 		if (StringUtils.isNotBlank(this.dynamic)) {
