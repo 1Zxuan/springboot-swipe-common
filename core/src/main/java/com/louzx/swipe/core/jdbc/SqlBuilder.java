@@ -383,13 +383,19 @@ public class SqlBuilder {
 			throw new SqlBuilderException("类不能为空!");
 		}
 		Table table = cls.getAnnotation(Table.class);
-		if (table == null || table.value() == "") {
+		if (table == null) {
 			throw new SqlBuilderException("没有table注解或者配置为空!");
 		}
-		if (StringUtils.isNotBlank(this.dynamic)) {
-			return table.value().replace(CommonConstants.DYNAMIC,this.dynamic);
+		String value = table.value();
+
+		if (StringUtils.isBlank(value)) {
+			value = underscoreName(cls.getName());
 		}
-		return table.value();
+
+		if (StringUtils.isNotBlank(this.dynamic)) {
+			return value.replace(CommonConstants.DYNAMIC,this.dynamic);
+		}
+		return value;
 	}
 
 	public <T> String getFieldByClass(Class<T> cls) {
