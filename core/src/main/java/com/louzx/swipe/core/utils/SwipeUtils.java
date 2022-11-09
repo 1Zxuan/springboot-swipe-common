@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.net.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
@@ -23,6 +23,33 @@ import java.util.concurrent.*;
 public final class SwipeUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(SwipeUtils.class);
+
+    public static String localMacAddress() {
+        try {
+            return localMacAddress(InetAddress.getLocalHost());
+        } catch (UnknownHostException uhe) {
+            logger.error("ERROR：{}", uhe.getMessage(), uhe);
+        }
+        return null;
+    }
+
+    public static String localMacAddress(InetAddress addr) {
+        StringBuilder sb = new StringBuilder();
+
+        try {
+            NetworkInterface byInetAddress = NetworkInterface.getByInetAddress(addr);
+            byte[] hardwareAddress = byInetAddress.getHardwareAddress();
+
+            for (int i = 0; i < hardwareAddress.length; i++) {
+                sb.append(String.format("%02X%s", hardwareAddress[i], (i < hardwareAddress.length - 1 ? "-" : "")));
+            }
+
+        } catch (SocketException se) {
+            logger.error("ERROR：{}", se.getMessage(), se);
+        }
+
+        return sb.toString();
+    }
 
     public static void throwTaskErrorIfTrue(String message, boolean... condition) throws TaskErrorException {
         if (null != condition) {
