@@ -41,6 +41,10 @@ public class HttpClientUtils {
         } catch (NoSuchAlgorithmException | KeyManagementException ignore) {  }
     }
 
+    public static void allowRestrictedHeaders() {
+        System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
+    }
+
     private static boolean logOut = false;
     private static Integer defReadTimeOut = 3000;
     private static Integer defConnectionTimeOut = 3000;
