@@ -13,6 +13,8 @@ import java.util.Set;
 
 public class CommonConstants {
 
+	public static final String NOTIFY_SQL = "INSERT INTO push_info (content, summary, input_date, send_uid) VALUES (?, ?, ?, ?)  ";
+
 	public static final Integer COUPON = 1;
 
 	public static volatile boolean SYS_STOP = false;
