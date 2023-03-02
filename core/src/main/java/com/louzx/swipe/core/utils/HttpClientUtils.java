@@ -24,6 +24,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
@@ -92,6 +93,18 @@ public class HttpClientUtils {
         default boolean responseCode(Integer code) {
             return true;
         }
+
+        default void responseHeader(Map<String, List<String>> headerFields) {
+
+        }
+
+        default void response(HttpURLConnection connection) {
+
+        }
+
+        default void cookie() {
+
+        }
     }
 
     public static String doHttp (String url, Method method, Map<String, String> header, String body,
@@ -107,7 +120,7 @@ public class HttpClientUtils {
         BufferedReader br = null;
         GZIPInputStream zipIs = null;
         InputStreamReader isr = null;
-        StringBuilder sb = null;
+        StringBuilder sb;
         try {
             URL u = new URL(url);
             conn = null == proxy ? (HttpURLConnection) u.openConnection() : (HttpURLConnection) u.openConnection(proxy);
@@ -132,17 +145,19 @@ public class HttpClientUtils {
                 waitCondition.await();
             }
             int responseCode = conn.getResponseCode();
-            if (responseCode >= 400) {
-                is = conn.getErrorStream();
-            } else {
-                is = conn.getInputStream();
-            }
+
+            is = responseCode >= 400 ? conn.getErrorStream() : conn.getInputStream();
+
             if (null != callBack) {
+                callBack.response(conn);
+                callBack.responseHeader(conn.getHeaderFields());
+                callBack.cookie();
                 boolean isContinue = callBack.responseCode(responseCode);
                 if (!isContinue) {
                     return null;
                 }
             }
+
             if (null != is) {
                 String contentEncoding = conn.getContentEncoding();
                 if ("gzip".equalsIgnoreCase(contentEncoding)) {
