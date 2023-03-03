@@ -46,6 +46,7 @@ public class HttpClientUtils {
         System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
     }
 
+    public static final String GZIP = "gzip";
     private static boolean logOut = false;
     private static Integer defReadTimeOut = 3000;
     private static Integer defConnectionTimeOut = 3000;
@@ -120,7 +121,6 @@ public class HttpClientUtils {
         BufferedReader br = null;
         GZIPInputStream zipIs = null;
         InputStreamReader isr = null;
-        StringBuilder sb;
         try {
             URL u = new URL(url);
             conn = null == proxy ? (HttpURLConnection) u.openConnection() : (HttpURLConnection) u.openConnection(proxy);
@@ -160,22 +160,19 @@ public class HttpClientUtils {
 
             if (null != is) {
                 String contentEncoding = conn.getContentEncoding();
-                if ("gzip".equalsIgnoreCase(contentEncoding)) {
+                if (GZIP.equalsIgnoreCase(contentEncoding)) {
                     zipIs = new GZIPInputStream(is);
                     isr = new InputStreamReader(zipIs, chartSet);
                 } else {
                     isr = new InputStreamReader(is, chartSet);
                 }
-                sb = new StringBuilder();
+                StringBuilder sb = new StringBuilder();
                 br = new BufferedReader(isr);
                 String tmpStr;
                 while (null != (tmpStr = br.readLine())) {
                     sb.append(tmpStr);
                 }
-                if (null != callBack) {
-                    return callBack.doCallBack(sb.toString());
-                }
-                return sb.toString();
+                return null == callBack ? sb.toString() : callBack.doCallBack(sb.toString());
             }
         } catch (Exception e) {
             if (logOut) {
