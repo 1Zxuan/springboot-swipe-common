@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -82,6 +83,10 @@ public class HttpClientUtils {
         return doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent, callBack, waitCondition);
     }
 
+    public static String doHttp (URL url, Method method, Map<String, String> header, String body, CallBack callBack, WaitCondition waitCondition) {
+        return doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent, callBack, waitCondition);
+    }
+
     public static JSONObject getJson (String url, Method method, Map<String, String> header, String body) {
         return SwipeUtils.parseJson(doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent, null, null));
     }
@@ -108,9 +113,10 @@ public class HttpClientUtils {
         }
     }
 
-    public static String doHttp (String url, Method method, Map<String, String> header, String body,
-                                 Integer readTimeOut, Integer connectionTimeOut, Charset chartSet,
-                                 boolean randAgent, CallBack callBack, WaitCondition waitCondition) {
+    public static String doHttp(URL u, Method method, Map<String, String> header, String body,
+                                Integer readTimeOut, Integer connectionTimeOut, Charset chartSet,
+                                boolean randAgent, CallBack callBack, WaitCondition waitCondition) {
+        //
         if (null == chartSet) {
             chartSet = defChartSet;
         }
@@ -122,7 +128,6 @@ public class HttpClientUtils {
         GZIPInputStream zipIs = null;
         InputStreamReader isr = null;
         try {
-            URL u = new URL(url);
             conn = null == proxy ? (HttpURLConnection) u.openConnection() : (HttpURLConnection) u.openConnection(proxy);
             conn.setRequestMethod(null == method ? Method.GET.name() : method.name());
             conn.setConnectTimeout(null == connectionTimeOut ? defConnectionTimeOut : connectionTimeOut);
@@ -176,7 +181,7 @@ public class HttpClientUtils {
             }
         } catch (Exception e) {
             if (logOut) {
-                logger.error(">>>>>>>>HttpClient：【{}】，URL：【{}】，Method：【{}】<<<<<<<<", e.getMessage(), url, method);
+                logger.error(">>>>>>>>HttpClient：【{}】，URL：【{}】，Method：【{}】<<<<<<<<", e.getMessage(), u.getPath(), method);
             }
         } finally {
             IOUtils.closeQuietly(br);
@@ -185,6 +190,21 @@ public class HttpClientUtils {
             IOUtils.closeQuietly(is);
             IOUtils.closeQuietly(os);
             IOUtils.close(conn);
+        }
+        return null;
+    }
+
+    public static String doHttp(URL url, Method method, Map<String, String> header, String body) {
+        return doHttp(url, method, header, body, (HttpClientUtils.CallBack)null, (WaitCondition)null);
+    }
+
+    public static String doHttp (String url, Method method, Map<String, String> header, String body,
+                                 Integer readTimeOut, Integer connectionTimeOut, Charset chartSet,
+                                 boolean randAgent, CallBack callBack, WaitCondition waitCondition) {
+        try {
+            return doHttp(new URL(url), method, header, body, readTimeOut, connectionTimeOut, chartSet, randAgent, callBack, waitCondition);
+        } catch (MalformedURLException e) {
+            //ignore
         }
         return null;
     }
