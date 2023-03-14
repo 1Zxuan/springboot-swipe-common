@@ -165,6 +165,8 @@ public class SqlBuilder {
 		if (value != null) {
 			update_property.add(getColumnNameByPropertyName(property) + "=:" + property);
 			params.put(property, value);
+		} else {
+			update_property.add(getColumnNameByPropertyName(property) + "= NULL");
 		}
 		return this;
 	}
