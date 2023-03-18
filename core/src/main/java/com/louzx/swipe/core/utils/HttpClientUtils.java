@@ -75,6 +75,10 @@ public class HttpClientUtils {
         return doHttp(url, method,header, body, null, null);
     }
 
+    public static String doHttp(String url, Method method, Map<String, String> header, String body, CallBack callBack) {
+        return doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent, callBack, null);
+    }
+
     public static String doHttp(String url, Method method, Map<String, String> header, String body, WaitCondition waitCondition) {
         return doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent, null, waitCondition);
     }
