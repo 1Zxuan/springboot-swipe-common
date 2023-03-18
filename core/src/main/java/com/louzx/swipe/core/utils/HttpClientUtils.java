@@ -91,6 +91,10 @@ public class HttpClientUtils {
         return doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent, callBack, waitCondition);
     }
 
+    public static String doHttp (URL url, Method method, Map<String, String> header, String body, CallBack callBack) {
+        return doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent, callBack, null);
+    }
+
     public static JSONObject getJson (String url, Method method, Map<String, String> header, String body) {
         return SwipeUtils.parseJson(doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent, null, null));
     }
