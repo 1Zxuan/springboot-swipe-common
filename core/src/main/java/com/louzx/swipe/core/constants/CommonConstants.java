@@ -1,11 +1,10 @@
 package com.louzx.swipe.core.constants;
 
 import com.louzx.swipe.core.entity.AbstractSwipeTask;
+import com.louzx.swipe.core.entity.ApiInfo;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 
@@ -13,9 +12,24 @@ import java.util.Set;
 
 public class CommonConstants {
 
+	public static final String ZERO = "0";
+	public static final String ONE = "1";
+	public static final String TWO = "2";
+	public static final String THREE = "3";
+	public static final String FOUR = "4";
+	public static final String FIVE = "5";
+	public static final String SIX = "6";
+	public static final String SEVEN = "7";
+	public static final String EIGHT = "8";
+	public static final String NINE = "9";
+	public static final String TEN = "10";
+
 	public static final String NOTIFY_SQL = "INSERT INTO push_info (content, summary, input_date, send_uid) VALUES (?, ?, ?, ?)  ";
 
 	public static final Integer COUPON = 1;
+
+	public static final String TRUE = "1";
+	public static final String FALSE = "0";
 
 	public static volatile boolean SYS_STOP = false;
 	public static final String GOODS_ITEM = "商品：【%s】，数量：【%s】<br/>";
