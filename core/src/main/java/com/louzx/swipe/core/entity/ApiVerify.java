@@ -22,7 +22,6 @@ public class ApiVerify {
     private String failMsg;
     private Integer seq;
     private Integer parentId;
-    private Integer notifyId;
     private String closed;
 
     @Transient

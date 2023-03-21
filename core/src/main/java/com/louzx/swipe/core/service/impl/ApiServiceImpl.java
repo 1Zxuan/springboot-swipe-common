@@ -27,7 +27,7 @@ public class ApiServiceImpl implements IApiService {
 
     @Override
     public List<ApiInfo> loadApi(Integer projectId) {
-        List<ApiInfo> apiInfos = commonDao.query(SqlBuilder.build(ApiInfo.class).eq("closed", CommonConstants.FALSE));
+        List<ApiInfo> apiInfos = commonDao.query(SqlBuilder.build(ApiInfo.class).eq("project_id", projectId).eq("closed", CommonConstants.FALSE));
         for (ApiInfo apiInfo : apiInfos) {
             this.loadApiHeader(apiInfo);
             this.loadApiVerify(apiInfo);

@@ -27,7 +27,7 @@ public class ApiInfo {
     private String closed;
     private String remark;
     private Integer notifyId;
-
+    @Transient
     private final Map<String, String> header = new HashMap<>();
 
     @Transient
