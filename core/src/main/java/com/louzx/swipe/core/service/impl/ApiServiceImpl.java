@@ -47,7 +47,7 @@ public class ApiServiceImpl implements IApiService {
                 .eq("closed", CommonConstants.FALSE)));
         Map<String, String> header = apiInfo.getHeader();
         for (ApiHeader ah : apiHeader) {
-            if (CommonConstants.TRUE.equals(ah.getValueSource())) {
+            if (CommonConstants.ONE.equals(ah.getValueSource())) {
                 //固定值
                 header.put(ah.getHeaderName(), ah.getHeaderValue());
             }
