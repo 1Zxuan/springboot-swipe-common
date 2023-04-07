@@ -9,7 +9,8 @@ import lombok.Setter;
 @Table
 public class ApiHeader {
 
-    private String headerKey;
+    private String headerName;
     private String headerValue;
+    private String valueSource;
 
 }
