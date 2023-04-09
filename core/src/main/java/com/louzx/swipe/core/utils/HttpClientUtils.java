@@ -95,6 +95,10 @@ public class HttpClientUtils {
         return doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent, callBack, null);
     }
 
+    public static String doHttp (URL url, Method method, Map<String, String> header, String body, WaitCondition waitCondition) {
+        return doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent, null, waitCondition);
+    }
+
     public static JSONObject getJson (String url, Method method, Map<String, String> header, String body) {
         return SwipeUtils.parseJson(doHttp(url, method, header, body, defReadTimeOut, defConnectionTimeOut, StandardCharsets.UTF_8, defRandAgent, null, null));
     }
@@ -155,7 +159,7 @@ public class HttpClientUtils {
                 os.write("".getBytes(chartSet));
             }
             if (null != waitCondition) {
-                waitCondition.await();
+                waitCondition.await(conn, os);
             }
             int responseCode = conn.getResponseCode();
 
