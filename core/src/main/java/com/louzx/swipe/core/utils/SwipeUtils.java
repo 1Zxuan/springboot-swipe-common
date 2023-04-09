@@ -241,17 +241,17 @@ public final class SwipeUtils {
         sleep(sleepTime);
     }
 
-    public static void sleepIfTrue(boolean condition, Integer sleepTime) {
+    public static void sleepIfTrue(boolean condition, int sleepTime) {
         sleepIfTrue(condition, sleepTime, false);
     }
 
-    public static void sleepRandIfTrue (boolean condition, Integer sleepTime){
+    public static void sleepRandIfTrue (boolean condition, int sleepTime){
         if (condition) {
             randSleep(sleepTime);
         }
     }
 
-    public static void sleepIfTrue(boolean condition, Integer sleepTime, boolean rand) {
+    public static void sleepIfTrue(boolean condition, int sleepTime, boolean rand) {
         if (condition) {
             if (rand) {
                 randSleep(sleepTime);
@@ -287,7 +287,12 @@ public final class SwipeUtils {
         try {
             Thread.sleep(sleepTime);
         } catch (Exception ignore) {
+
         }
+    }
+
+    public static void sleep(boolean randSleep, int sleepTime) {
+        sleepIfTrue(true, sleepTime, randSleep);
     }
 
     /**

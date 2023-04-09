@@ -17,16 +17,16 @@ public class ApiInfo {
 
     private Integer id;
     private Integer projectId;
-    private String apiUri;
+    private String apiName;
     private String apiUrl;
     private String apiMethod;
-    private Integer acceptCode;
-    private String acceptNull;
-    private String checkNullFailMsg;
     private String apiVerifyType;
     private String closed;
     private String remark;
     private Integer notifyId;
+    private String proxyIp;
+    private Integer proxyPort;
+
     @Transient
     private final Map<String, String> header = new HashMap<>();
 
