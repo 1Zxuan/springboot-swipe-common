@@ -225,13 +225,17 @@ public class HttpClientUtils {
         trustAllHttpsCertificates("TLSv1.1");
     }
 
-    public static void trustAllHttpsCertificates(String ssLVersion) throws NoSuchAlgorithmException, KeyManagementException {
+    public static SSLContext sslContext(String ssLVersion) throws NoSuchAlgorithmException, KeyManagementException {
         TrustManager[] trustManagers = new TrustManager[1];
         trustManagers[0] = new TrustAllManager();
         SSLContext sslContext = SSLContext.getInstance(ssLVersion);
         sslContext.getServerSessionContext().setSessionCacheSize(0);
         sslContext.init(null, trustManagers, null);
-        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+        return sslContext;
+    }
+
+    public static void trustAllHttpsCertificates(String ssLVersion) throws KeyManagementException, NoSuchAlgorithmException {
+        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext(ssLVersion).getSocketFactory());
     }
 
     private static class TrustAllManager implements X509TrustManager {
