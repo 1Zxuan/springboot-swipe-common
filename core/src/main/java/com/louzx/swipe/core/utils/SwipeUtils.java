@@ -285,7 +285,7 @@ public final class SwipeUtils {
 
     public static void sleep(long sleepTime) {
         try {
-            Thread.sleep(sleepTime);
+            Thread.sleep(sleepTime > 0 ? sleepTime : 0);
         } catch (Exception ignore) {
 
         }
