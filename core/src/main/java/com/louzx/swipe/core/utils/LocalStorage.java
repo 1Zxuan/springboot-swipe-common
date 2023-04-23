@@ -1,27 +1,26 @@
 package com.louzx.swipe.core.utils;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
 
 public class LocalStorage {
 
-    private final static ThreadLocal<Map<String, Object>> LOCAL_STORAGE = new ThreadLocal<>();
+    private final static ThreadLocal<JSONObject> LOCAL_STORAGE = new ThreadLocal<>();
 
-    public static Map<String, Object> init () {
-        Map<String, Object> property = LOCAL_STORAGE.get();
+    public static JSONObject init () {
+        JSONObject property = LOCAL_STORAGE.get();
         if (null == property) {
-            property = new HashMap<>(256);
+            property = new JSONObject();
             LOCAL_STORAGE.set(property);
         }
         return property;
     }
 
     public static Object getProperty(String name) {
-        Map<String, Object> property = LocalStorage.getProperty();
+        JSONObject property = LocalStorage.getProperty();
         return null != property ? property.get(name) : null;
     }
 
-    public static Map<String, Object> getProperty() {
+    public static JSONObject getProperty() {
         return LocalStorage.init();
     }
 
