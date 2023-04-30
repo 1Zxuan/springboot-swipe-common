@@ -200,6 +200,13 @@ public class SqlBuilder {
 		return this;
 	}
 
+	public SqlBuilder eq(boolean condition, String property, Object value) {
+		if (condition) {
+			return this.eq(property, value);
+		}
+		return this;
+	}
+
 	public SqlBuilder eq(String property, Object value) {
 		if (value != null) {
 			if (value instanceof String && value == "") {
