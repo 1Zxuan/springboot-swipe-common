@@ -10,9 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Getter
-@Setter
-@Table("api_info")
+@Getter@Setter@Table("api_info")
 public class ApiInfo {
 
     private Integer id;
@@ -29,13 +27,10 @@ public class ApiInfo {
 
     @Transient
     private final Map<String, String> header = new HashMap<>();
-
-    @Transient
-    private List<ApiHeader> apiHeaders;
-
     @Transient
     private List<ApiVerify> apiVerifies;
-
+    @Transient
+    private List<ApiHandler> apiHandlers;
     @Transient
     private List<NotifyTemplate> notifyTemplates;
 
