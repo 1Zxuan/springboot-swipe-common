@@ -4,7 +4,7 @@ import com.louzx.swipe.core.jdbc.SqlBuilder;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * @author louzx
@@ -28,11 +28,23 @@ public class CommonSwipeConfig {
         CommonSwipeConfig.unLoadUsers = unLoadUsers;
     }
 
+    public static final Set<String> LOAD_USERS = new HashSet<>();
+
     public static String conditionSql() {
         StringBuilder sql = new StringBuilder();
         String[] loadUsers = null;
-        if (null != CommonSwipeConfig.getLoadUsers() && CommonSwipeConfig.getLoadUsers().length > 0) {
-            loadUsers = CommonSwipeConfig.getLoadUsers();
+        String[] users = CommonSwipeConfig.getLoadUsers();
+        if ((null != users && users.length > 0) || !LOAD_USERS.isEmpty()) {
+            loadUsers = new String[(null != users ? users.length : 0) + LOAD_USERS.size()];
+            int index = 0;
+            if (null != users) {
+                for (String user : users) {
+                    loadUsers[index++] = user;
+                }
+            }
+            for (String loadUser : LOAD_USERS) {
+                loadUsers[index++] = loadUser;
+            }
             sql.append(" and username in ( ");
         } else if (null != CommonSwipeConfig.getUnLoadUsers() && CommonSwipeConfig.getUnLoadUsers().length > 0) {
             loadUsers = CommonSwipeConfig.getUnLoadUsers();
