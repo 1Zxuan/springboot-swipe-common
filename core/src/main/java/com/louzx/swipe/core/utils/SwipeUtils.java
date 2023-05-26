@@ -24,6 +24,23 @@ public final class SwipeUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(SwipeUtils.class);
 
+
+    public static String maskedPhoneNum(String phoneNum) {
+        return maskedString(phoneNum, 3, 6, '*');
+    }
+
+    public static String maskedString(String string, int start, int end, char mask) {
+        char[] maskedNumber = new char[string.length()];
+        for (int i = 0; i < string.length(); i++) {
+            if (i >= start && i <= end) {
+                maskedNumber[i] = mask;
+            } else {
+                maskedNumber[i] = string.charAt(i);
+            }
+        }
+        return new String(maskedNumber);
+    }
+
     public static String localMacAddress() {
         try {
             return localMacAddress(InetAddress.getLocalHost());
