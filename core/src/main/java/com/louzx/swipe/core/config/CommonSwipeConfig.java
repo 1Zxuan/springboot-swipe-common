@@ -2,15 +2,29 @@ package com.louzx.swipe.core.config;
 
 import com.louzx.swipe.core.jdbc.SqlBuilder;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author louzx
  * @date 2021/10/26
  */
 public class CommonSwipeConfig {
+
+    private static String taskGroup;
+
+    public static String getTaskGroup() {
+        return taskGroup;
+    }
+
+    @Value("${task.group:}")
+    public void setTaskGroup(String taskGroup) {
+        CommonSwipeConfig.taskGroup = taskGroup;
+    }
 
     @Getter
     private static String[] loadUsers;
@@ -71,5 +85,10 @@ public class CommonSwipeConfig {
             }
         }
         return sqlBuilder;
+    }
+
+
+    public static String getTaskGroupCondition() {
+        return StringUtils.isBlank(CommonSwipeConfig.getTaskGroup()) ? "" : String.format(" and task_group = '%s' ", CommonSwipeConfig.getTaskGroup());
     }
 }

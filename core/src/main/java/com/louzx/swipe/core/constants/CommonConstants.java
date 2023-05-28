@@ -1,10 +1,11 @@
 package com.louzx.swipe.core.constants;
 
 import com.louzx.swipe.core.entity.AbstractSwipeTask;
-import com.louzx.swipe.core.entity.ApiInfo;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * 
