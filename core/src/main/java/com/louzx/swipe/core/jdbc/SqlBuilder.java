@@ -182,7 +182,7 @@ public class SqlBuilder {
 		Class<?> cls = obj.getClass();
 		Field[] fields = cls.getDeclaredFields();
 		for (Field field : fields) {
-			if ("serialVersionUID".equals(field.getName())) {
+			if ("serialVersionUID".equals(field.getName()) || null != field.getAnnotation(Transient.class)) {
 				continue;
 			}
 			String name = field.getName();
