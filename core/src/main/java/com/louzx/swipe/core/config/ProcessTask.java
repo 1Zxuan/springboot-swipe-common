@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+
 public class ProcessTask {
 
     private final Logger logger = LoggerFactory.getLogger(ProcessTask.class);
@@ -26,6 +27,7 @@ public class ProcessTask {
     }
 
     private void execute() {
+        logger.info(">处理：【{}】类型的任务", CommonSwipeConfig.getTaskGroup());
         jdbcTemplate.update("update swipe_task t " +
                 "inner join user_info t1 on t.username = t1.username " +
                 "set t.status = (case when t.status in (100,101) then 102 when t.status in (1, 2, 5) then 0 else t.status end) where 1=1 "
